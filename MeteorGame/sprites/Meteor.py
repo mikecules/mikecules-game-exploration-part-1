@@ -7,6 +7,7 @@ class Meteor(Sprite):
         self.x_speed = x_speed
         self.y_speed = y_speed
         self.sprite_reused_count = 0
+        self.max_reuse_count = 0
 
     def update(self):
         x1, y1 = self.rect.center
@@ -36,3 +37,6 @@ class Meteor(Sprite):
         if updated:
             self.sprite_reused_count += 1
 
+            if self.sprite_reused_count > self.max_reuse_count:
+                print('Killing meteor at count {0}'.format(self.sprite_reused_count - 1))
+                self.kill()

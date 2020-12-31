@@ -8,7 +8,7 @@ def get_spaceship(screen):
     return sprites.SpaceShip(screen, 'spaceship.png', 640, 500, 10)
 
 
-def get_meteors(screen, number_of_meteors):
+def get_meteors(screen, number_of_meteors, max_reuse_count=1):
     meteors = []
     screen_width = screen.get_width()
 
@@ -21,6 +21,7 @@ def get_meteors(screen, number_of_meteors):
         y_speed = 1 + random.randrange(1, 5) * random.random()
 
         meteor = sprites.Meteor(screen, meteor_file, x_pos, -0.1 * screen.get_height(), x_speed, y_speed)
+        meteor.max_reuse_count = max_reuse_count
         meteors.append(meteor)
 
     return meteors
@@ -38,10 +39,9 @@ def start_game(window_width=1200, window_height=720):
     meteor_group = pygame.sprite.Group(meteors)
 
     meteor_count = 1
-    max_meteor_reuse_count = 2
 
     meteor_event = pygame.USEREVENT
-    timer_interval_ms = 500
+    timer_interval_ms = 300
     pygame.time.set_timer(meteor_event, timer_interval_ms)
 
     while True:
@@ -51,10 +51,6 @@ def start_game(window_width=1200, window_height=720):
                 sys.exit()
             elif event.type == meteor_event:
                 meteor_group.add(get_meteors(screen, meteor_count))
-
-        for meteor in meteor_group.sprites():
-            if meteor.sprite_reused_count >= max_meteor_reuse_count:
-                meteor_group.remove(meteor)
 
         screen.fill((42, 45, 51))
 
