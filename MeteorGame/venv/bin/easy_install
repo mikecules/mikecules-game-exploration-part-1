@@ -1,4 +1,4 @@
-#!/Users/michael.moncada/Games/Meteor_Game/venv/bin/python
+#!/Users/moncadam/Projects/Games/mikecules-game-exploration-part-1/MeteorGame/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
