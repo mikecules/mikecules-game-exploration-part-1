@@ -25,3 +25,6 @@ class Sprite(pygame.sprite.Sprite):
     def apply_screen_constraints(self):
         pass
 
+    def collide(self, health_penalty=0):
+        pass
+
