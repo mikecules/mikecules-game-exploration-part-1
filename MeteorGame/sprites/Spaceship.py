@@ -21,8 +21,8 @@ class SpaceShip(Sprite):
             self._screen.blit(self.shield_surface, (x_pos, offset_y))
             x_pos += x_increment
 
-    def collide(self, health_penality):
-        self.health -= health_penality
+    def collide(self, health_penalty):
+        self.health -= health_penalty
 
     def apply_screen_constraints(self):
         screen_width = self._screen.get_width()
