@@ -24,9 +24,6 @@ class SpaceShip(Sprite):
     def collide(self, health_penality):
         self.health -= health_penality
 
-        if self.health <= 0:
-            self.kill()
-
     def apply_screen_constraints(self):
         screen_width = self._screen.get_width()
         screen_height = self._screen.get_height()
