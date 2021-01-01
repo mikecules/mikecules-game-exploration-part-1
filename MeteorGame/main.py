@@ -5,7 +5,11 @@ import random
 
 
 def get_spaceship(screen):
-    return sprites.SpaceShip(screen, 'spaceship.png', 640, 500, 10)
+    return sprites.SpaceShip(screen, 'spaceship.png', 640, 500)
+
+
+def get_laser(screen, position_x, position_y, speed=3):
+    return sprites.Laser(screen, 'Laser.png', position_x, position_y, speed)
 
 
 def get_meteors(screen, number_of_meteors, max_reuse_count=1):
@@ -35,6 +39,8 @@ def start_game(window_width=1200, window_height=720):
     spaceship = get_spaceship(screen)
     spaceship_group = pygame.sprite.GroupSingle(spaceship)
 
+    laser_group = pygame.sprite.Group()
+
     meteors = get_meteors(screen, 1)
     meteor_group = pygame.sprite.Group(meteors)
 
@@ -44,23 +50,33 @@ def start_game(window_width=1200, window_height=720):
     timer_interval_ms = 300
     pygame.time.set_timer(meteor_event, timer_interval_ms)
 
-    while True:
+    while True and spaceship_group.sprite:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == meteor_event:
                 meteor_group.add(get_meteors(screen, meteor_count))
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                pos_x, pos_y = pygame.mouse.get_pos()
+                laser_group.add(get_laser(screen, pos_x, pos_y, 15))
 
         screen.fill((42, 45, 51))
 
+        laser_group.draw(screen)
         spaceship_group.draw(screen)
-        spaceship.update()
-
         meteor_group.draw(screen)
 
-        for meteor in meteor_group.sprites():
-            meteor.update()
+        laser_group.update()
+        spaceship.update()
+        meteor_group.update()
+
+        if pygame.sprite.spritecollide(spaceship_group.sprite, meteor_group, True):
+            spaceship_group.sprite.collide(1)
+
+        for laser in laser_group.sprites():
+            if pygame.sprite.spritecollide(laser, meteor_group, True):
+                laser.kill()
 
         pygame.display.update()
         clock.tick(120)
