@@ -31,6 +31,14 @@ def get_meteors(screen, number_of_meteors, max_reuse_count=1):
     return meteors
 
 
+def show_game_over_screen():
+    pass
+
+
+def show_game_start_screen():
+    pass
+
+
 def start_game(window_width=1200, window_height=720):
     pygame.init()
     screen = pygame.display.set_mode((window_width, window_height))
@@ -50,7 +58,15 @@ def start_game(window_width=1200, window_height=720):
     timer_interval_ms = 300
     pygame.time.set_timer(meteor_event, timer_interval_ms)
 
-    while True and spaceship_group.sprite:
+    game_states = {
+        'START': 1,
+        'PLAYING': 2,
+        'ENDED': 3
+    }
+
+    game_state = game_states['PLAYING']
+
+    while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -63,20 +79,33 @@ def start_game(window_width=1200, window_height=720):
 
         screen.fill((42, 45, 51))
 
-        laser_group.draw(screen)
-        spaceship_group.draw(screen)
-        meteor_group.draw(screen)
+        # Playing Game State
+        if game_state == game_states['PLAYING']:
+            laser_group.draw(screen)
+            spaceship_group.draw(screen)
+            meteor_group.draw(screen)
 
-        laser_group.update()
-        spaceship.update()
-        meteor_group.update()
+            laser_group.update()
+            spaceship.update()
+            meteor_group.update()
 
-        if pygame.sprite.spritecollide(spaceship_group.sprite, meteor_group, True):
-            spaceship_group.sprite.collide(1)
+            if pygame.sprite.spritecollide(spaceship_group.sprite, meteor_group, True):
+                spaceship_group.sprite.collide(1)
 
-        for laser in laser_group.sprites():
-            if pygame.sprite.spritecollide(laser, meteor_group, True):
-                laser.kill()
+            for laser in laser_group.sprites():
+                if pygame.sprite.spritecollide(laser, meteor_group, True):
+                    laser.kill()
+
+        # Ended Game State
+        elif game_state == game_states['ENDED']:
+            show_game_over_screen()
+
+        # Beginning of Game State
+        else:
+            show_game_start_screen()
+
+        if spaceship.health < 0:
+            game_state = game_states['ENDED']
 
         pygame.display.update()
         clock.tick(120)
