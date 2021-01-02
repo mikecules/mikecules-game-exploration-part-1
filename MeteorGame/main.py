@@ -64,6 +64,7 @@ def show_game_over_screen(screen, font, font_colour=(255, 255, 255)):
 
 def start_game(window_width=1200, window_height=720):
     pygame.init()
+    pygame.mouse.set_visible(False)
     screen = pygame.display.set_mode((window_width, window_height))
     clock = pygame.time.Clock()
     game_font = pygame.font.Font('{0}/LazenbyCompSmooth.ttf'.format(sprites.Sprite.ASSETS_DIR), 30)
