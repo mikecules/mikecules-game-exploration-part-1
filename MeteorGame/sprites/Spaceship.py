@@ -21,6 +21,9 @@ class SpaceShip(Sprite):
             self._screen.blit(self.shield_surface, (x_pos, offset_y))
             x_pos += x_increment
 
+    def reset_health(self):
+        self.health = 5
+
     def collide(self, health_penalty):
         self.health -= health_penalty
 
