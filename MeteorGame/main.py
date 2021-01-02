@@ -72,6 +72,8 @@ def start_game(window_width=1200, window_height=720):
     spaceship_group = pygame.sprite.GroupSingle(spaceship)
 
     laser_group = pygame.sprite.Group()
+    laser_timer = 0
+    laser_charging = False
 
     meteors = get_meteors(screen, 1)
     meteor_group = pygame.sprite.Group(meteors)
@@ -103,9 +105,12 @@ def start_game(window_width=1200, window_height=720):
                     spaceship.reset_health()
                     meteor_group.empty()
                     laser_group.empty()
-                else:
+                elif not laser_charging:
                     pos_x, pos_y = pygame.mouse.get_pos()
                     laser_group.add(get_laser(screen, pos_x, pos_y, 15))
+                    laser_timer = pygame.time.get_ticks()
+                    laser_charging = True
+                    spaceship.discharge()
 
         screen.fill((42, 45, 51))
 
@@ -125,6 +130,10 @@ def start_game(window_width=1200, window_height=720):
             for laser in laser_group.sprites():
                 if pygame.sprite.spritecollide(laser, meteor_group, True):
                     laser.kill()
+
+            if (pygame.time.get_ticks() - laser_timer) >= 250:
+                laser_charging = False
+                spaceship.charge()
 
         # Ended Game State
         else:
